@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'URW Bookman';
+            src: url('./fonts/URWBookman-Light.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'URW Bookman';
+            src: url('./fonts/URWBookman-Demi.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'URW Bookman';
+            src: url('./fonts/URWBookman-LightItalic.ttf') format('truetype');
+            font-weight: 400;
+            font-style: italic;
+        }
+        
+        @font-face {
+            font-family: 'URW Bookman';
+            src: url('./fonts/URWBookman-DemiItalic.ttf') format('truetype');
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --terracotta: #B85C3C;
+            --ochre: #C9845D;
+            --warm-cream: #F4EDE4;
+            --deep-brown: #3D2817;
+            --border-color: #B85C3C;
+            --accent: #D47C4A;
+            --font-serif: 'URW Bookman', 'Georgia', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--warm-cream);
+            color: var(--deep-brown);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--ochre) 100%);
+            color: var(--warm-cream);
+            padding: 3rem 2rem;
+            border-bottom: 4px solid var(--deep-brown);
+            position: relative;
+        }
+        
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+            font-family: var(--font-serif);
+        }
+        
+        .tagline {
+            font-size: 0.9rem;
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+        
+        .lang-toggle {
+            background: rgba(0,0,0,0.2);
+            border: 2px solid var(--warm-cream);
+            color: var(--warm-cream);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: var(--font-serif);
+            transition: background 0.2s;
+        }
+        
+        .lang-toggle:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        nav {
+            max-width: 900px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 3rem;
+            padding: 0 2rem;
+            border-top: 3px solid var(--terracotta);
+            padding-top: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: var(--deep-brown);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--terracotta);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--border-color);
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-family: var(--font-serif);
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: var(--font-serif);
+            margin: 1rem 0;
+        }
+        
+        .box {
+            border: 3px solid var(--border-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            background: white;
+            position: relative;
+        }
+        
+        .box::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 120px;
+            height: 8px;
+            background: var(--terracotta);
+        }
+        
+        .box h3 {
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .box p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-family: var(--font-serif);
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 700px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                gap: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .gallery-item {
+            border: 2px solid var(--border-color);
+            background: white;
+            position: relative;
+        }
+        
+        .gallery-item-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--warm-cream), var(--ochre));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            opacity: 0.6;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .gallery-item-text {
+            padding: 1rem;
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+        }
+        
+        .gallery-item-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--terracotta);
+            font-family: var(--font-serif);
+        }
+        
+        .guide-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .guide-list li {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--terracotta);
+            background: rgba(184, 92, 60, 0.05);
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+        }
+        
+        .guide-list li strong {
+            font-weight: 700;
+            color: var(--terracotta);
+        }
+        
+        .blog-item {
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background: white;
+        }
+        
+        .blog-date {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--terracotta);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .blog-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            font-family: var(--font-serif);
+        }
+        
+        .blog-excerpt {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--deep-brown);
+            font-family: var(--font-serif);
+        }
+        
+        .diagram {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        
+        .diagram-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--terracotta);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+        
+        pre {
+            overflow-x: auto;
+            line-height: 1.5;
+            font-family: var(--font-mono);
+        }
+        
+        footer {
+            background: var(--deep-brown);
+            color: var(--warm-cream);
+            padding: 2rem;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+        
+        /* Intro note */
+        .intro-note {
+            background: rgba(184, 92, 60, 0.1);
+            border-left: 4px solid var(--terracotta);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div>
+                <h1 id="main-title">Ramps are Beautiful</h1>
+                <p class="tagline" id="main-tagline">The Architecture of Independence</p>
+            </div>
+            <button class="lang-toggle" onclick="toggleLanguage()">EN / FR</button>
+        </div>
+    </header>
+    
+    <nav>
+        <a href="#" onclick="showSection('home'); return false;" id="nav-home">Home</a>
+        <a href="#" onclick="showSection('gallery'); return false;" id="nav-gallery">Gallery</a>
+        <a href="#" onclick="showSection('guides'); return false;" id="nav-guides">Guides</a>
+        <a href="#" onclick="showSection('blog'); return false;" id="nav-blog">Resources</a>
+    </nav>
+    
+    <div class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="intro-note">
+                <strong>Note:</strong> Replace 'https://your-domain.com/fonts/' in the CSS @font-face rules with your actual font directory URL.
+            </div>
+            
+            <h2 id="h-vision">The Vision</h2>
+            
+            <div class="box">
+                <h3 id="vision-title">Why Ramps Matter</h3>
+                <p id="vision-text">A ramp is not merely a technical solution. It is a statement about who belongs in the world. The ramp, in its most radical form, is architecture that says: "You are expected here. You are ordinary. Your presence is normal."</p>
+                <p id="vision-text2">This project documents the beauty, history, and politics of the ramp—as told through photographs, diagrams, stories, and the work of Michael Daniels and the Center for Independent Living.</p>
+            </div>
+            
+            <div class="diagram">
+                <div class="diagram-title" id="diagram-title">Ramps: A Brief Genealogy</div>
+                <pre>1945─────────────────1980s──────────────────2025
+     POST-WAR          CIL FOUNDED       GLOBAL MOVEMENT
+     ACCESSIBILITY    RAMPS ARE          RAMPS ARE
+     EMERGES          BEAUTIFUL          EVERYWHERE</pre>
+            </div>
+        </section>
+        
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="section">
+            <h2 id="h-gallery">Gallery</h2>
+            <p id="gallery-intro" style="margin-bottom: 2rem; font-size: 0.95rem;">A global collection of ramps documented through photographs, diagrams, and design analysis.</p>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="gallery-item-image">🏗️</div>
+                    <div class="gallery-item-text">
+                        <div class="gallery-item-title" id="item1-title">Berkeley, CA</div>
+                        <p id="item1-desc">CIL headquarters ramp. Concrete, grade 1:12, hand rails both sides. A radical act of independence.</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-item-image">📐</div>
+                    <div class="gallery-item-text">
+                        <div class="gallery-item-title" id="item2-title">London, UK</div>
+                        <p id="item2-desc">Modern wooden ramp. Modular design, accessible materials, contemporary approach to an ancient problem.</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-item-image">🏛️</div>
+                    <div class="gallery-item-text">
+                        <div class="gallery-item-title" id="item3-title">São Paulo, Brazil</div>
+                        <p id="item3-desc">Public transport ramp. Integrated into urban landscape. Making mobility ordinary.</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-item-image">🎨</div>
+                    <div class="gallery-item-text">
+                        <div class="gallery-item-title" id="item4-title">Tokyo, Japan</div>
+                        <p id="item4-desc">Aesthetic integration. Wooden ramp merges with building facade. Function meets poetry.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- GUIDES SECTION -->
+        <section id="guides" class="section">
+            <h2 id="h-guides">Guides & Resources</h2>
+            
+            <div class="box">
+                <h3 id="guide1-title">How to Design and Build a Ramp</h3>
+                <ul class="guide-list">
+                    <li><strong id="g1-step1">Step 1:</strong> <span id="g1-step1-text">Understand the grade. ADA requires maximum 1:12 (1 inch of rise per 12 inches of run). Shallower is better.</span></li>
+                    <li><strong id="g1-step2">Step 2:</strong> <span id="g1-step2-text">Calculate landing spaces. Every 30 inches of rise requires a flat landing of at least 5 feet.</span></li>
+                    <li><strong id="g1-step3">Step 3:</strong> <span id="g1-step3-text">Add handrails. Both sides, graspable diameter, continuous along entire run.</span></li>
+                    <li><strong id="g1-step4">Step 4:</strong> <span id="g1-step4-text">Choose durable materials. Consider weather, wear, maintenance, and aesthetic intention.</span></li>
+                </ul>
+            </div>
+            
+            <div class="diagram">
+                <div class="diagram-title" id="diagram2-title">Basic Ramp Profile</div>
+                <pre>
+     ┌─────────────────────────┐
+     │  LANDING (5' minimum)   │
+     └─────┐                   │
+           │ RAMP (1:12 grade) │
+           │                   │
+           │   handrails       │
+           └─────────────────┐ │
+                           └─┘
+                    BASE LEVEL
+                </pre>
+            </div>
+            
+            <div class="box">
+                <h3 id="guide2-title">Materials & Aesthetics</h3>
+                <p id="guide2-text">The ramp is not infrastructure. It is architecture. Choose materials that integrate with the building's character: wood for warmth, steel for clarity, concrete for boldness. A ramp can be invisible—or it can be proud.</p>
+            </div>
+        </section>
+        
+        <!-- BLOG SECTION -->
+        <section id="blog" class="section">
+            <h2 id="h-blog">Blog & Essays</h2>
+            
+            <div class="blog-item">
+                <div class="blog-date" id="blog1-date">21 April 2026</div>
+                <div class="blog-title" id="blog1-title">Michael Daniels: The Ramp as Liberation</div>
+                <div class="blog-excerpt" id="blog1-excerpt">An interview with the author of "Ramps are Beautiful" about accessibility, architecture, and why the ramp matters. Michael Daniels speaks about the radical act of building for everyone, and what it means to design with disability at the center, not the margins.</div>
+            </div>
+            
+            <div class="blog-item">
+                <div class="blog-date" id="blog2-date">15 April 2026</div>
+                <div class="blog-title" id="blog2-title">The Politics of Access</div>
+                <div class="blog-excerpt" id="blog2-excerpt">Why ramps are not charity. A deep dive into the history of disability activism, the Center for Independent Living, and how architecture became a tool of liberation. Featuring archival photographs and interviews with architects and disabled activists.</div>
+            </div>
+            
+            <div class="blog-item">
+                <div class="blog-date" id="blog3-date">10 April 2026</div>
+                <div class="blog-title" id="blog3-title">Building a Ramp for My Daughter</div>
+                <div class="blog-excerpt" id="blog3-excerpt">A case study: designing and constructing an accessible entry for a family home. Plans, materials, lessons learned, and reflections on what it means to build accessibility into the places we love.</div>
+            </div>
+        </section>
+    </div>
+    
+    <footer id="footer-text">
+        © 2026 Ramps are Beautiful. A project by Xavier Marie. Licensed under CC-BY 4.0.<br>
+        Built on the work of Michael Daniels and the Center for Independent Living.
+    </footer>
+    
+    <script>
+        let currentLang = 'en';
+        
+        const content = {
+            en: {
+                'main-title': 'Ramps are Beautiful',
+                'main-tagline': 'The Architecture of Independence',
+                'nav-home': 'Home',
+                'nav-gallery': 'Gallery',
+                'nav-guides': 'Guides',
+                'nav-blog': 'Resources',
+                'h-vision': 'The Vision',
+                'vision-title': 'Why Ramps Matter',
+                'vision-text': 'A ramp is not merely a technical solution. It is a statement about who belongs in the world. The ramp, in its most radical form, is architecture that says: "You are expected here. You are ordinary. Your presence is normal."',
+                'vision-text2': 'This project documents the beauty, history, and politics of the ramp—as told through photographs, diagrams, stories, and the work of Michael Daniels and the Center for Independent Living.',
+                'diagram-title': 'Ramps: A Brief Genealogy',
+                'h-gallery': 'Gallery',
+                'gallery-intro': 'A global collection of ramps documented through photographs, diagrams, and design analysis.',
+                'item1-title': 'Berkeley, CA',
+                'item1-desc': 'CIL headquarters ramp. Concrete, grade 1:12, hand rails both sides. A radical act of independence.',
+                'item2-title': 'London, UK',
+                'item2-desc': 'Modern wooden ramp. Modular design, accessible materials, contemporary approach to an ancient problem.',
+                'item3-title': 'São Paulo, Brazil',
+                'item3-desc': 'Public transport ramp. Integrated into urban landscape. Making mobility ordinary.',
+                'item4-title': 'Tokyo, Japan',
+                'item4-desc': 'Aesthetic integration. Wooden ramp merges with building facade. Function meets poetry.',
+                'h-guides': 'Guides & Resources',
+                'guide1-title': 'How to Design and Build a Ramp',
+                'g1-step1': 'Step 1:',
+                'g1-step1-text': 'Understand the grade. ADA requires maximum 1:12 (1 inch of rise per 12 inches of run). Shallower is better.',
+                'g1-step2': 'Step 2:',
+                'g1-step2-text': 'Calculate landing spaces. Every 30 inches of rise requires a flat landing of at least 5 feet.',
+                'g1-step3': 'Step 3:',
+                'g1-step3-text': 'Add handrails. Both sides, graspable diameter, continuous along entire run.',
+                'g1-step4': 'Step 4:',
+                'g1-step4-text': 'Choose durable materials. Consider weather, wear, maintenance, and aesthetic intention.',
+                'diagram2-title': 'Basic Ramp Profile',
+                'guide2-title': 'Materials & Aesthetics',
+                'guide2-text': 'The ramp is not infrastructure. It is architecture. Choose materials that integrate with the building\'s character: wood for warmth, steel for clarity, concrete for boldness. A ramp can be invisible—or it can be proud.',
+                'h-blog': 'Blog & Essays',
+                'blog1-date': '21 April 2026',
+                'blog1-title': 'Michael Daniels: The Ramp as Liberation',
+                'blog1-excerpt': 'An interview with the author of "Ramps are Beautiful" about accessibility, architecture, and why the ramp matters. Michael Daniels speaks about the radical act of building for everyone, and what it means to design with disability at the center, not the margins.',
+                'blog2-date': '15 April 2026',
+                'blog2-title': 'The Politics of Access',
+                'blog2-excerpt': 'Why ramps are not charity. A deep dive into the history of disability activism, the Center for Independent Living, and how architecture became a tool of liberation. Featuring archival photographs and interviews with architects and disabled activists.',
+                'blog3-date': '10 April 2026',
+                'blog3-title': 'Building a Ramp for My Daughter',
+                'blog3-excerpt': 'A case study: designing and constructing an accessible entry for a family home. Plans, materials, lessons learned, and reflections on what it means to build accessibility into the places we love.',
+                'footer-text': '© 2026 Ramps are Beautiful. A project by Xavier Marie. Licensed under CC-BY 4.0.\nBuilt on the work of Michael Daniels and the Center for Independent Living.'
+            },
+            fr: {
+                'main-title': 'Les Rampes sont Belles',
+                'main-tagline': 'L\'Architecture de l\'Indépendance',
+                'nav-home': 'Accueil',
+                'nav-gallery': 'Galerie',
+                'nav-guides': 'Guides',
+                'nav-blog': 'Ressources',
+                'h-vision': 'La Vision',
+                'vision-title': 'Pourquoi les Rampes Importent',
+                'vision-text': 'Une rampe n\'est pas qu\'une solution technique. C\'est une déclaration sur qui appartient au monde. La rampe, dans sa forme la plus radicale, est une architecture qui dit : « Tu es attendu ici. Tu es ordinaire. Ta présence est normale. »',
+                'vision-text2': 'Ce projet documente la beauté, l\'histoire et la politique de la rampe—à travers les photographies, diagrammes, histoires et le travail de Michael Daniels et du Center for Independent Living.',
+                'diagram-title': 'Rampes : Une Brève Généalogie',
+                'h-gallery': 'Galerie',
+                'gallery-intro': 'Une collection mondiale de rampes documentées à travers des photographies, diagrammes et analyse de design.',
+                'item1-title': 'Berkeley, CA',
+                'item1-desc': 'Rampe du siège du CIL. Béton, pente 1:12, mains courantes des deux côtés. Un acte radical d\'indépendance.',
+                'item2-title': 'Londres, RU',
+                'item2-desc': 'Rampe en bois moderne. Design modulaire, matériaux accessibles, approche contemporaine d\'un problème ancien.',
+                'item3-title': 'São Paulo, Brésil',
+                'item3-desc': 'Rampe de transport public. Intégrée au paysage urbain. Rendre la mobilité ordinaire.',
+                'item4-title': 'Tokyo, Japon',
+                'item4-desc': 'Intégration esthétique. Rampe en bois fusionnée avec la façade du bâtiment. La fonction rencontre la poésie.',
+                'h-guides': 'Guides & Ressources',
+                'guide1-title': 'Comment Concevoir et Construire une Rampe',
+                'g1-step1': 'Étape 1 :',
+                'g1-step1-text': 'Comprendre la pente. L\'ADA exige un maximum de 1:12 (1 pouce de hauteur pour 12 pouces de longueur). Plus plat est mieux.',
+                'g1-step2': 'Étape 2 :',
+                'g1-step2-text': 'Calculer les paliers. Tous les 30 pouces de hauteur nécessite un palier plat d\'au moins 5 pieds.',
+                'g1-step3': 'Étape 3 :',
+                'g1-step3-text': 'Ajouter des mains courantes. Des deux côtés, diamètre préhensible, continu le long de toute la course.',
+                'g1-step4': 'Étape 4 :',
+                'g1-step4-text': 'Choisir des matériaux durables. Considérer la météo, l\'usure, l\'entretien, et l\'intention esthétique.',
+                'diagram2-title': 'Profil Basique de Rampe',
+                'guide2-title': 'Matériaux & Esthétique',
+                'guide2-text': 'La rampe n\'est pas une infrastructure. C\'est une architecture. Choisir les matériaux qui s\'intègrent au caractère du bâtiment : le bois pour la chaleur, l\'acier pour la clarté, le béton pour l\'audace. Une rampe peut être invisible—ou elle peut être fière.',
+                'h-blog': 'Blog & Essais',
+                'blog1-date': '21 avril 2026',
+                'blog1-title': 'Michael Daniels : La Rampe comme Libération',
+                'blog1-excerpt': 'Une interview avec l\'auteur de « Les Rampes sont Belles » sur l\'accessibilité, l\'architecture, et pourquoi les rampes importent. Michael Daniels parle de l\'acte radical de concevoir pour tous, et ce que cela signifie de concevoir avec le handicap au centre.',
+                'blog2-date': '15 avril 2026',
+                'blog2-title': 'La Politique de l\'Accès',
+                'blog2-excerpt': 'Pourquoi les rampes ne sont pas de la charité. Une plongée profonde dans l\'histoire de l\'activisme pour le handicap, le Center for Independent Living, et comment l\'architecture est devenue un outil de libération.',
+                'blog3-date': '10 avril 2026',
+                'blog3-title': 'Construire une Rampe pour ma Fille',
+                'blog3-excerpt': 'Une étude de cas : concevoir et construire une entrée accessible pour une maison familiale. Plans, matériaux, leçons apprises, et réflexions sur ce que cela signifie de construire l\'accessibilité dans les lieux que nous aimons.',
+                'footer-text': '© 2026 Les Rampes sont Belles. Un projet de Xavier Marie. Sous licence CC-BY 4.0.\nConstruit sur le travail de Michael Daniels et du Center for Independent Living.'
+            }
+        };
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'fr' : 'en';
+            updateContent();
+        }
+        
+        function updateContent() {
+            Object.keys(content[currentLang]).forEach(key => {
+                const elem = document.getElementById(key);
+                if (elem) {
+                    elem.textContent = content[currentLang][key];
+                }
+            });
+        }
+        
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        // Initialize
+        updateContent();
+    </script>
+</body>
+</html>
