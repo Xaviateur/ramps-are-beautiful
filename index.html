@@ -190,6 +190,34 @@ p + p { margin-top: 1em; }
 .steps .sr-step { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 .diagram { margin: 0; border: 3px solid var(--brown); background: #FBF7F1; }
+/* Ramp calculator */
+.calc-grid { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1.5rem 2.5rem; margin-top: 1.25rem; align-items: start; }
+@media (max-width: 720px) { .calc-grid { grid-template-columns: minmax(0, 1fr); } }
+.calc-in label { display: block; font-weight: 700; margin-bottom: .4rem; }
+.calc-row { display: flex; gap: .5rem; align-items: stretch; }
+.calc-row input { flex: 1; min-width: 0; width: 0; font: inherit; font-size: 1.6rem; font-weight: 700; color: var(--brown); background: #fff; border: 2px solid var(--brown); padding: .35rem .6rem; }
+.calc-unit { display: flex; border: 2px solid var(--brown); margin: 0; padding: 0; min-width: 0; flex: none; }
+.calc-unit legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.calc-unit label { margin: 0; display: flex; align-items: center; padding: 0 .75rem; min-width: 2.75rem; justify-content: center; cursor: pointer; font-family: var(--mono); font-weight: 700; font-size: .9rem; }
+.calc-unit input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.calc-unit input:checked + span { color: var(--cream); }
+.calc-unit label:has(input:checked) { background: var(--brown); color: var(--cream); }
+.calc-unit label:has(input:focus-visible) { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+.calc-hint { font-size: .85rem; margin-top: .5rem; }
+.calc-err { color: var(--terracotta-ink); font-weight: 700; font-size: .9rem; margin-top: .5rem; }
+.calc-out { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; }
+.calc-out div { border-top: 1.5px solid rgba(61,40,23,.3); padding-top: .5rem; }
+.calc-out dt { font-size: .85rem; }
+.calc-out dd { font-weight: 700; font-size: 1.45rem; line-height: 1.2; color: var(--brown); }
+.calc-out dd small { font-size: .8rem; font-weight: 400; font-family: var(--mono); color: var(--terracotta-ink); }
+.calc-out .total { grid-column: 1 / -1; }
+.calc-out .total dd { color: var(--terracotta-ink); font-size: 1.75rem; }
+.calc-fig { margin-top: 1.5rem; }
+.calc-fig svg { display: block; width: 100%; height: auto; background: var(--kraft); }
+.calc-fig svg text { font-family: var(--mono); font-size: 18px; fill: var(--brown); }
+.calc-note { font-size: .85rem; margin-top: .75rem; }
+.sr-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
 .diagram-title { font-family: var(--mono); font-weight: 700; font-size: .9rem; padding: .8rem 1.25rem; border-bottom: 3px solid var(--brown); background: var(--kraft); }
 .diagram-scroll { overflow-x: auto; padding: 1rem .5rem .5rem; }
 .diagram svg { display: block; width: 100%; min-width: 640px; height: auto; }
@@ -428,6 +456,39 @@ footer svg { width: 120px; height: auto; }
         <figcaption id="diag-cap">Drawn to scale. Values from the 2010 ADA Standards for Accessible Design, §405 (ramps) and §505 (handrails). Metric equivalents: 760 mm rise, 1525 mm landing, 865–965 mm rail, 305 mm extension. Other countries set different limits; check your local code.</figcaption>
       </figure>
 
+
+      <article class="box" id="calc" aria-labelledby="calc-title">
+        <h2 id="calc-title" class="h3">Ramp calculator</h2>
+        <p id="calc-intro">Enter the height to climb. The calculator applies the ADA maximum slope of 1:12.</p>
+        <div class="calc-grid">
+          <div class="calc-in">
+            <label for="calc-rise" id="calc-label">Height to climb</label>
+            <div class="calc-row">
+              <input id="calc-rise" type="number" inputmode="decimal" min="0" step="any" value="50" aria-describedby="calc-hint calc-err">
+              <fieldset class="calc-unit">
+                <legend id="calc-unit-legend">Unit</legend>
+                <label><input type="radio" name="calc-unit" value="cm" checked><span>cm</span></label>
+                <label><input type="radio" name="calc-unit" value="in"><span>in</span></label>
+              </fieldset>
+            </div>
+            <p class="calc-hint" id="calc-hint">Difference in level between start and arrival.</p>
+            <p class="calc-err" id="calc-err" hidden></p>
+          </div>
+          <dl class="calc-out">
+            <div><dt id="calc-k-run">Minimum horizontal run</dt><dd id="calc-v-run"></dd></div>
+            <div><dt id="calc-k-runs">Runs needed</dt><dd id="calc-v-runs"></dd></div>
+            <div><dt id="calc-k-land">Intermediate landings</dt><dd id="calc-v-land"></dd></div>
+            <div><dt id="calc-k-rail">Handrails</dt><dd id="calc-v-rail"></dd></div>
+            <div class="total"><dt id="calc-k-total">Total length on the ground</dt><dd id="calc-v-total"></dd></div>
+          </dl>
+        </div>
+        <figure class="calc-fig">
+          <svg id="calc-svg" viewBox="0 0 1000 200" role="img" aria-labelledby="calc-svg-title"><title id="calc-svg-title">Side elevation of the calculated ramp</title></svg>
+          <figcaption class="calc-note" id="calc-note">Horizontal and vertical to the same scale. Start and end landings not included. Values: ADA 2010, §405. French rules (arrêté du 20 avril 2017) differ.</figcaption>
+        </figure>
+        <p class="sr-live" id="calc-live" aria-live="polite"></p>
+      </article>
+
       <article class="box">
         <h2 id="guide2-title" class="h3">Materials &amp; Aesthetics</h2>
         <p class="pull" id="guide2-text">The ramp is not infrastructure. It is architecture. Choose materials that integrate with the building's character: wood for warmth, steel for clarity, concrete for boldness. A ramp can be invisible—or it can be proud.</p>
@@ -507,6 +568,14 @@ const content = {
     'd-run': 'run 30 ft (9.14 m) at 1:12 max', 'd-landing': 'landing ≥ 60 in', 'd-rise': 'rise ≤ 30 in',
     'd-rail': 'rail 34–38 in', 'd-ext': '12 in',
     'diag-cap': 'Drawn to scale. Values from the 2010 ADA Standards for Accessible Design, §405 (ramps) and §505 (handrails). Metric equivalents: 760 mm rise, 1525 mm landing, 865–965 mm rail, 305 mm extension. Other countries set different limits; check your local code.',
+    'calc-title': 'Ramp calculator',
+    'calc-intro': 'Enter the height to climb. The calculator applies the ADA maximum slope of 1:12.',
+    'calc-label': 'Height to climb', 'calc-unit-legend': 'Unit',
+    'calc-hint': 'Difference in level between start and arrival.',
+    'calc-k-run': 'Minimum horizontal run', 'calc-k-runs': 'Runs needed', 'calc-k-land': 'Intermediate landings',
+    'calc-k-rail': 'Handrails', 'calc-k-total': 'Total length on the ground',
+    'calc-svg-title': 'Side elevation of the calculated ramp',
+    'calc-note': 'Horizontal and vertical to the same scale. Start and end landings not included. Values: ADA 2010, §405. French rules (arrêté du 20 avril 2017) differ.',
     'guide2-title': 'Materials & Aesthetics',
     'guide2-text': 'The ramp is not infrastructure. It is architecture. Choose materials that integrate with the building\'s character: wood for warmth, steel for clarity, concrete for boldness. A ramp can be invisible—or it can be proud.',
     'h-blog': 'Blog & Essays',
@@ -561,6 +630,14 @@ const content = {
     'd-run': 'volée 9,14 m à 1:12 max', 'd-landing': 'palier ≥ 1525 mm', 'd-rise': 'hauteur ≤ 760 mm',
     'd-rail': 'main courante 865–965 mm', 'd-ext': '305 mm',
     'diag-cap': 'Dessiné à l\'échelle. Valeurs issues des 2010 ADA Standards for Accessible Design, §405 (rampes) et §505 (mains courantes). Les normes varient selon les pays : en France, les ERP relèvent de l\'arrêté du 20 avril 2017. Vérifiez la réglementation locale.',
+    'calc-title': 'Calculateur de rampe',
+    'calc-intro': 'Saisissez la hauteur à franchir. Le calculateur applique la pente maximale ADA de 1:12.',
+    'calc-label': 'Hauteur à franchir', 'calc-unit-legend': 'Unité',
+    'calc-hint': 'Différence de niveau entre le départ et l\'arrivée.',
+    'calc-k-run': 'Longueur horizontale minimale', 'calc-k-runs': 'Volées nécessaires', 'calc-k-land': 'Paliers intermédiaires',
+    'calc-k-rail': 'Mains courantes', 'calc-k-total': 'Longueur totale au sol',
+    'calc-svg-title': 'Coupe de la rampe calculée',
+    'calc-note': 'Horizontale et verticale à la même échelle. Paliers de départ et d\'arrivée non inclus. Valeurs : ADA 2010, §405. Les règles françaises (arrêté du 20 avril 2017) diffèrent.',
     'guide2-title': 'Matériaux & Esthétique',
     'guide2-text': 'La rampe n\'est pas une infrastructure. C\'est une architecture. Choisir les matériaux qui s\'intègrent au caractère du bâtiment : le bois pour la chaleur, l\'acier pour la clarté, le béton pour l\'audace. Une rampe peut être invisible—ou elle peut être fière.',
     'h-blog': 'Blog & Essais',
@@ -599,6 +676,7 @@ function updateContent() {
   document.documentElement.lang = currentLang;
   document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === currentLang)));
   renderHead();
+  if (typeof renderCalc === 'function' && document.getElementById('calc-rise')) renderCalc();
 }
 
 function renderHead() {
@@ -631,6 +709,80 @@ function showSection(section, focus) {
   window.scrollTo(0, 0);
   if (focus) document.getElementById('main').focus({ preventScroll: true });
 }
+
+
+// ---------- Ramp calculator (ADA 2010 §405) ----------
+const RULES = { cm: { maxRise: 76, landing: 152.5, rail: 15 }, in: { maxRise: 30, landing: 60, rail: 6 } };
+const CALC_TXT = {
+  en: { runs: n => n, land: n => n, yes: 'Required', no: 'Not required', railNote: u => 'above ' + RULES[u].rail + ' ' + u,
+        per: u => 'max ' + RULES[u].maxRise + ' ' + u + ' rise per run', each: u => RULES[u].landing + ' ' + u + ' min. each',
+        err: 'Enter a height greater than 0.',
+        live: (r, u, t, n) => 'Rise ' + r + ' ' + u + ': ' + t + ' ' + u + ' on the ground, ' + n + (n > 1 ? ' runs.' : ' run.') },
+  fr: { yes: 'Requises', no: 'Non requises', railNote: u => 'au-delà de ' + RULES[u].rail + ' ' + u,
+        per: u => RULES[u].maxRise + ' ' + u + ' de hauteur max. par volée', each: u => RULES[u].landing.toLocaleString('fr-FR') + ' ' + u + ' min. chacun',
+        err: 'Saisissez une hauteur supérieure à 0.',
+        live: (r, u, t, n) => 'Hauteur ' + r + ' ' + u + ' : ' + t + ' ' + u + ' au sol, ' + n + (n > 1 ? ' volées.' : ' volée.') }
+};
+let calcUnit = 'cm';
+const calcEl = id => document.getElementById(id);
+function calcFmt(x) { return new Intl.NumberFormat(currentLang === 'fr' ? 'fr-FR' : 'en-GB', { maximumFractionDigits: 1 }).format(x); }
+function computeRamp(rise, unit) {
+  const r = RULES[unit];
+  const runs = Math.max(1, Math.ceil(rise / r.maxRise - 1e-9));
+  const run = rise * 12, landings = runs - 1;
+  return { run, runs, landings, total: run + landings * r.landing, rails: rise > r.rail };
+}
+let calcLiveTimer;
+function renderCalc() {
+  const L = CALC_TXT[currentLang], u = calcUnit, rise = parseFloat(String(calcEl('calc-rise').value).replace(',', '.'));
+  const err = calcEl('calc-err'), input = calcEl('calc-rise');
+  const ids = ['calc-v-run', 'calc-v-runs', 'calc-v-land', 'calc-v-rail', 'calc-v-total'];
+  if (!(rise > 0)) {
+    err.textContent = L.err; err.hidden = false; input.setAttribute('aria-invalid', 'true');
+    ids.forEach(i => calcEl(i).textContent = '—'); calcEl('calc-svg').innerHTML = '<title id="calc-svg-title">' + content[currentLang]['calc-svg-title'] + '</title>';
+    return;
+  }
+  err.hidden = true; input.removeAttribute('aria-invalid');
+  const c = computeRamp(rise, u);
+  const set = (id, val, note) => { calcEl(id).innerHTML = ''; calcEl(id).append(val); if (note) { const s = document.createElement('small'); s.textContent = ' ' + note; calcEl(id).append(document.createElement('br'), s); } };
+  set('calc-v-run', calcFmt(c.run) + ' ' + u);
+  set('calc-v-runs', String(c.runs), L.per(u));
+  set('calc-v-land', String(c.landings), c.landings ? L.each(u) : '');
+  set('calc-v-rail', c.rails ? L.yes : L.no, L.railNote(u));
+  set('calc-v-total', calcFmt(c.total) + ' ' + u);
+  drawRamp(rise, c);
+  clearTimeout(calcLiveTimer);
+  calcLiveTimer = setTimeout(() => { calcEl('calc-live').textContent = L.live(calcFmt(rise), u, calcFmt(c.total), c.runs); }, 600);
+}
+function drawRamp(rise, c) {
+  const svg = calcEl('calc-svg'), W = 1000, H = 200, pad = 40, padR = 140, base = 150;
+  const k = Math.min((W - pad - padR) / c.total, (base - 30) / rise);   // same scale both axes
+  const r = RULES[calcUnit], stepRise = rise / c.runs;
+  let x = pad, y = base, pts = [[x, y]];
+  for (let i = 0; i < c.runs; i++) {
+    x += stepRise * 12 * k; y -= stepRise * k; pts.push([x, y]);
+    if (i < c.runs - 1) { x += r.landing * k; pts.push([x, y]); }
+  }
+  const poly = pts.map(p => p.map(n => n.toFixed(1)).join(',')).join(' ') + ' ' + x.toFixed(1) + ',' + base;
+  const lands = [];
+  for (let i = 1; i < pts.length - 1; i += 2) lands.push('<line x1="' + pts[i][0].toFixed(1) + '" y1="' + pts[i][1].toFixed(1) + '" x2="' + pts[i + 1][0].toFixed(1) + '" y2="' + pts[i + 1][1].toFixed(1) + '" stroke="#3D2817" stroke-width="4"/>');
+  const u = calcUnit;
+  svg.innerHTML = '<title id="calc-svg-title">' + content[currentLang]['calc-svg-title'] + '</title>'
+    + '<line x1="0" y1="' + base + '" x2="' + W + '" y2="' + base + '" stroke="#3D2817" stroke-width="2"/>'
+    + '<polygon points="' + poly + '" fill="#B85C3C" fill-opacity=".85" stroke="#3D2817" stroke-width="2" stroke-linejoin="round"/>'
+    + lands.join('')
+    + '<line x1="' + pad + '" y1="' + (base + 22) + '" x2="' + x.toFixed(1) + '" y2="' + (base + 22) + '" stroke="#3D2817" stroke-width="1.2"/>'
+    + '<line x1="' + pad + '" y1="' + (base + 16) + '" x2="' + pad + '" y2="' + (base + 28) + '" stroke="#3D2817"/><line x1="' + x.toFixed(1) + '" y1="' + (base + 16) + '" x2="' + x.toFixed(1) + '" y2="' + (base + 28) + '" stroke="#3D2817"/>'
+    + '<text x="' + ((pad + x) / 2).toFixed(1) + '" y="' + (base + 42) + '" text-anchor="middle">' + calcFmt(c.total) + ' ' + u + '</text>'
+    + '<line x1="' + (x + 12).toFixed(1) + '" y1="' + y.toFixed(1) + '" x2="' + (x + 12).toFixed(1) + '" y2="' + base + '" stroke="#3D2817" stroke-width="1.2"/>' + '<text x="' + (x + 20).toFixed(1) + '" y="' + ((base + y) / 2 + 6).toFixed(1) + '">' + calcFmt(rise) + ' ' + u + '</text>';
+}
+calcEl('calc-rise').addEventListener('input', renderCalc);
+document.querySelectorAll('input[name="calc-unit"]').forEach(radio => radio.addEventListener('change', () => {
+  const v = parseFloat(String(calcEl('calc-rise').value).replace(',', '.'));
+  const next = radio.value;
+  if (v > 0 && next !== calcUnit) calcEl('calc-rise').value = +(next === 'in' ? v / 2.54 : v * 2.54).toFixed(1);
+  calcUnit = next; renderCalc();
+}));
 
 document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
 window.addEventListener('hashchange', () => showSection(location.hash.slice(1), true));
