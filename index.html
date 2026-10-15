@@ -103,7 +103,9 @@ a:hover { color: var(--accent-ink); }
   .meta .m2 { grid-column: 1 / -1; order: 3; }
 }
 .plate { margin: 0; }
-.plate svg { display: block; width: 100%; height: auto; background: var(--plate); }
+.plate img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 7; object-fit: cover; object-position: 50% 0%; background: var(--plate); }
+@media (max-width: 760px) { .plate img { aspect-ratio: 4 / 3; } }
+.cap a { color: inherit; }
 .cap { padding-top: .6rem; font-size: .8125rem; color: var(--mute); }
 .cap .c1 { grid-column: span 2; color: var(--ink); font-weight: 500; }
 .cap .c2 { grid-column: 3 / span 7; }
@@ -271,25 +273,9 @@ since 2026</p>
 Volume 01</p>
     </div>
   </div>
-  <figure class="plate" aria-labelledby="cap1">
-      <svg viewBox="0 170 1440 330" aria-hidden="true" focusable="false">
-        <defs>
-          <pattern id="rule520" width="1440" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(-2.862)"><line x1="0" y1="1" x2="1440" y2="1" stroke="#DCDCD7" stroke-width="2"/></pattern>
-          <pattern id="ground" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1A1A1A" stroke-width="1.2" opacity=".5"/></pattern>
-        </defs>
-        <rect width="1440" height="520" fill="url(#rule520)"/>
-        <!-- drawn to scale, 1 unit = 1 cm: 11.20 m run at 5 % (rise 56 cm), 1.40 m landing, rail at 90 cm -->
-        <rect x="1300" y="150" width="140" height="290" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="2"/>
-        <rect x="0" y="440" width="1440" height="80" fill="url(#ground)"/>
-        <line x1="0" y1="440" x2="1440" y2="440" stroke="#1A1A1A" stroke-width="2"/>
-        <polygon points="40,440 1160,384 1300,384 1300,440" fill="#C4502B" stroke="#1A1A1A" stroke-width="2" stroke-linejoin="round"/>
-        <g stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round">
-          <polyline points="10,350 40,350 1160,294 1300,294"/>
-          <line x1="40" y1="350" x2="40" y2="440"/><line x1="413" y1="331" x2="413" y2="421"/><line x1="787" y1="313" x2="787" y2="403"/><line x1="1160" y1="294" x2="1160" y2="384"/>
-        </g>
-        <text x="600" y="296" transform="rotate(-2.862 600 296)" fill="#1A1A1A" font-size="24" font-weight="800" font-family="Schibsted Grotesk, sans-serif">5 % — 1:20</text>
-      </svg>
-    <div class="wrap"><div class="cap grid"><span class="c1" aria-hidden="true">Fig. 01</span><span class="c2" id="cap1">A ramp at 1:20 (5 %), drawn to scale with its landing and handrail. Photograph to come.</span></div></div>
+  <figure class="plate">
+      <img src="./images/fig01-lebuser-1920.jpg" srcset="./images/fig01-lebuser-960.jpg 960w, ./images/fig01-lebuser-1920.jpg 1920w" sizes="100vw" width="1920" height="1082" alt="" decoding="async" fetchpriority="high">
+    <div class="wrap"><div class="cap grid"><span class="c1" aria-hidden="true">Fig. 01</span><span class="c2" id="cap1"></span></div></div>
   </figure>
   <div class="wrap">
     <nav class="toc grid" aria-labelledby="toc-h">
@@ -572,7 +558,7 @@ const content = {
     'meta1': 'Open archive\nsince 2026',
     'meta2': 'Ramps, inclined planes and the architecture of independence. After the book by Michael Daniels, 1986.',
     'meta3': 'Gradient 1:20\nVolume 01',
-    'cap1': 'A ramp at 1:20 (5 %), drawn to scale with its landing and handrail. Photograph to come.',
+    'cap1': 'David Lebuser, a WCMX rider, during a show. Photo: David Lebuser, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">CC BY-SA 4.0</a>, via <a href="https://commons.wikimedia.org/wiki/File:DavidLebuserOneWheel.jpg">Wikimedia Commons</a>, cropped.',
     'toc-h': 'Contents',
     'toc1-t': 'Gallery', 'toc1-d': 'Remarkable ramps, from Berkeley to Tokyo',
     'toc2-t': 'Guides', 'toc2-d': 'French rules, ADA and a ramp calculator',
@@ -642,7 +628,7 @@ const content = {
     'meta1': 'Archive ouverte\ndepuis 2026',
     'meta2': 'Rampes, plans inclinés et architecture de l\'indépendance. D\'après le livre de Michael Daniels, 1986.',
     'meta3': 'Pente 1:20\nVolume 01',
-    'cap1': 'Une rampe à 5 % (1:20), dessinée à l\'échelle avec son palier et sa main courante. Photographie à venir.',
+    'cap1': 'David Lebuser, pilote de WCMX, lors d\'une démonstration. Photo : David Lebuser, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>, via <a href="https://commons.wikimedia.org/wiki/File:DavidLebuserOneWheel.jpg">Wikimedia Commons</a>, recadrée.',
     'toc-h': 'Sommaire',
     'toc1-t': 'Galerie', 'toc1-d': 'Rampes remarquables, de Berkeley à Tokyo',
     'toc2-t': 'Guides', 'toc2-d': 'Normes françaises, ADA et calculateur de rampe',
@@ -720,7 +706,7 @@ function updateContent() {
   const t = content[currentLang];
   Object.keys(t).forEach(key => {
     const el = document.getElementById(key);
-    if (el) el[key === 'tl2' ? 'innerHTML' : 'textContent'] = t[key];  // tl2: trusted static string with <cite>
+    if (el) el[key === 'tl2' || key === 'cap1' ? 'innerHTML' : 'textContent'] = t[key];  // tl2, cap1: trusted static strings with markup
   });
   document.documentElement.lang = currentLang;
   document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === currentLang)));
